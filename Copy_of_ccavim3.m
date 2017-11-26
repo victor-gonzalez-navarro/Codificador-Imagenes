@@ -22,10 +22,13 @@ alpha = 50;
 image = B;
 image2 = B;
 entra = 0;
+nun = 0;
 
 %% Busqueda exhaustiva
 for inix=1:8:256-7
     for iniy=1:8:256-7
+        nun = nun +1;
+        
         image = B;
         dmin = 500000;
         for i=max(1,inix-alpha):inix
@@ -50,36 +53,37 @@ for inix=1:8:256-7
             end
         end
 
-
-
-        %% Finalizacion
+        % Finalizacion
         if entra == 1
-            % S A C A R   A B S
-            image2(inix:inix+7,iniy:iniy+7) = ((image(posxmin:(posxmin+7),posymin:(posymin+7)))-(image(inix:(inix+7),iniy:(iniy+7))))+128;
-            
-            image(posxmin:posxmin+7,posymin)=100*ones(8,1);
-            image(posxmin:posxmin+7,posymin+7)=100*ones(8,1);
-            image(posxmin,posymin:posymin+7)=100*ones(8,1);
-            image(posxmin+7,posymin:posymin+7)=100*ones(8,1);
+            image2(inix:inix+7,iniy:iniy+7) = ((image(posxmin:(posxmin+7),posymin:(posymin+7)))-(image(inix:(inix+7),iniy:(iniy+7))));        
+            matrix(nun,:) = [posxmin, posymin];
         else
-            % S A C A R   A B S
             image2(inix:inix+7,iniy:iniy+7) = (image(inix:(inix+7),iniy:(iniy+7)));
             entra = 1;
-        end
-        image(inix:inix+7,iniy)=zeros(8,1);
-        image(inix:inix+7,iniy+7)=zeros(8,1);
-        image(inix,iniy:iniy+7)=zeros(8,1);
-        image(inix+7,iniy:iniy+7)=zeros(8,1);
-
-        image = uint8(image);
-        image2 = uint8(image2);
-        figure(1);
-        imshow(image2)
-        figure(2);
-        imshow(image)
-        
+            matrix(nun,:) = [999, 999];
+        end        
     end
 end
 
-disp('Sacar abs');
+
+%% Decoder a partir de matrix y image2
+nun = 0;
+imagedecod = zeros(256,256);
+for inix=1:8:256-7
+    for iniy=1:8:256-7
+        nun = nun +1;
+        if matrix(nun,1) ~= 999
+            imagedecod(inix:inix+7,iniy:iniy+7) = imagedecod(matrix(nun,1):matrix(nun,1)+7,matrix(nun,2):matrix(nun,2)+7)-image2(inix:inix+7,iniy:iniy+7);
+            % Si quiero mostrar imagen asignando bloques mas parecidos
+            %imagedecod(inix:inix+7,iniy:iniy+7) = image(matrix(nun,1):matrix(nun,1)+7,matrix(nun,2):matrix(nun,2)+7);
+        else
+            imagedecod(inix:inix+7,iniy:iniy+7) = image2(inix:inix+7,iniy:iniy+7);
+        end
+        imageaux = uint8(imagedecod);
+        figure(3);
+        imshow(imageaux)
+    end
+end
+
+
 
