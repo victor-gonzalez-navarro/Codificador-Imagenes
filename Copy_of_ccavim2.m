@@ -78,6 +78,8 @@ for inix=1:8:256-7
         figure(2);
         imshow(image)
         
+        pause(1);
+        
     end
 end
 
