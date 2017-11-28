@@ -1,7 +1,7 @@
 close all;
 
 %% Leer imagen
-fileIDD1 = fopen('camman.lum');
+fileIDD1 = fopen('pam256.lum');
 A = fread(fileIDD1);
 B= zeros(256, 256);
 
@@ -58,6 +58,13 @@ for inix=1:8:256-7
         if entra == 1
             image2(inix:inix+7,iniy:iniy+7) = ((image(posxmin:(posxmin+7),posymin:(posymin+7)))-(image(inix:(inix+7),iniy:(iniy+7))));
             image2(inix:inix+7,iniy:iniy+7) = dct2(image2(inix:inix+7,iniy:iniy+7));
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            image2(inix+6:inix+7,iniy:iniy+7) = zeros(2,8);
+            image2(inix:inix+7,iniy+6:iniy+7) = zeros(8,2);
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
             matrix(nun,:) = [posxmin, posymin];
         else
             image2(inix:inix+7,iniy:iniy+7) = dct2(image(inix:(inix+7),iniy:(iniy+7)));
@@ -84,8 +91,6 @@ for inix=1:8:256-7
         if matrix(nun,1) ~= 999
             image2(inix:inix+7,iniy:iniy+7)=idct2(image2(inix:inix+7,iniy:iniy+7));
             imagedecod(inix:inix+7,iniy:iniy+7) = (imagedecod(matrix(nun,1):matrix(nun,1)+7,matrix(nun,2):matrix(nun,2)+7)-(image2(inix:inix+7,iniy:iniy+7)));
-            % Si quiero mostrar imagen asignando bloques mas parecidos
-            %imagedecod(inix:inix+7,iniy:iniy+7) = image(matrix(nun,1):matrix(nun,1)+7,matrix(nun,2):matrix(nun,2)+7);
         else
             imagedecod(inix:inix+7,iniy:iniy+7) = idct2(image2(inix:inix+7,iniy:iniy+7));
         end
